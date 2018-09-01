@@ -10,6 +10,29 @@
         #oId1{width: 800px;height: 800px;margin:0  auto}
         img{ width:200px;height: 200px }
     </style>
+    <script>
+       window.onload = function(){
+        var Document = document;
+        var img = Document.querySelectorAll("img");
+        var leg = img.length;
+
+        for( var i = 0; i < leg;i++ ){
+            (function(){
+                var tem = i;      //重新申明多个tem ，分别储存在内存中，不用的tem里面存储着不同的值
+                img[i].onmousedown = function(ev){
+                    ev = ev || window.event;
+                    var x = ev.clientX - img[tem].offsetLeft;
+                    console.log(x);
+              
+                }
+
+            })()
+        }
+        
+
+       }
+
+    </script>
 </head>
 <body>
     
