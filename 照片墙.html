@@ -21,7 +21,7 @@
         img {
             width: 200px;
             height: 200px;
-            /* position: absolute; */
+            
         }
     </style>
     <script>
@@ -30,14 +30,22 @@
             var img = Document.querySelectorAll("img");
             var leg = img.length;
             var arr = [];
+            var Imax = null;
+           
             for (var i = 0; i < leg; i++) {
+                //利用二维数组储存
                 arr.push( [img[i].offsetLeft, img[i].offsetTop] );
                 (function () {
-                    var tem = i;      //采用闭包方式使新创建的变量留存在内存当中，重新申明多个tem ，不同的tem里面存储着不同的值
+                    var tem = i;      //采用闭包方式使新创建的变量留存在内存当中，重新申明多个tem ，不同的tem里面存储着不同的值       
                     img[i].onmousedown = function (ev) {
-                        ev = ev || window.event;
+                        ev = ev || window.event; 
                         var x = ev.clientX - img[tem].offsetLeft;
                         var y = ev.clientY - img[tem].offsetTop;
+                        
+                        Imax = Max(img);
+                        if( Imax >= this.style.zIndex  ){
+                            this.style.zIndex = Imax+1;
+                        }
                         //注意：如果是直接拖拽图片，会触发浏览器的默认行为,会对onmouseup事件产生影响
                         ev.preventDefault();
                         Document.onmousemove = function (ev) {
@@ -48,9 +56,9 @@
                         }
                         Document.onmouseup = function () {
                             Document.onmousemove = Document.onmouseup = null;
+                            
                         }
                     }
-
 
                 })()
             }
@@ -61,8 +69,18 @@
                 img[i].style.top = arr[i][1] + "px";
             }
 
+        }
+        //找出最大值
+        function Max(obj){
+            var leng = obj.length;
+            var t = 0;
+            for( var i = 0; i < leng;i++ ){
+                if( t  < obj[i].style.zIndex  ){
+                    t = obj[i].style.zIndex;
+                }
 
-
+            }
+            return t 
         }
 
     </script>
@@ -76,7 +94,7 @@
     <img src="image/zhaopian2.jpg" />
     <img src="image/zhaopian3.jpg" />
     <img src="image/zhaopian4.jpg" />
-    <img src="image/zhaopian6.jpg" />
+    <img src="image/zhaopian6.jpeg" />
     <img src="image/zhaopian7.jpg" />
     <img src="image/zhaopian8.jpg" />
     <img src="image/zhaopian9.jpg" />
