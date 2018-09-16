@@ -5,14 +5,18 @@ window.onload = function () {
     var arr = [];
     var Imax = null;
     var max1 = null;
+    var ls = null;
+    var thisindex = null;
     max1 = img[0].style.zIndex;
     for (var i = 0; i < leg; i++) {
         //利用二维数组储存
         arr.push([img[i].offsetLeft, img[i].offsetTop]);
+        img[i].style.index = i;
+        
         (function () {
             var tem = i;      //采用闭包方式使新创建的变量留存在内存当中，重新申明多个tem ，不同的tem里面存储着不同的值       
             img[i].onmousedown = function (ev) {
-                posiT(img, arr)
+                
                 ev = ev || window.event;
                 var x = ev.clientX - img[tem].offsetLeft;
                 var y = ev.clientY - img[tem].offsetTop;
@@ -35,16 +39,27 @@ window.onload = function () {
                     for (var i = 0; i < leg; i++) {
                         img[i].style.border = "";
                     }
-                    var a = dista(This,img)
-                    if( a ){
+                    var a = dista(This, img)
+                    if (a) {
+                        ls = a;
                         a.style.border = "1px solid red";
                     }
-                    
+
                 }
                 Document.onmouseup = function () {
-                    posiT(img, arr)
-                    for (var i = 0; i < leg; i++) {
+                    for(var i = 0; i < leg ;i++){
                         img[i].style.border = "";
+                    }
+                    //调换图片位置
+                    if( ls ){
+                        This.style.left = arr[ls.style.index][0] + "px";
+                        This.style.top = arr[ls.style.index][1] + "px";    
+                        ls.style.left = arr[This.style.index][0] + "px";
+                        ls.style.top = arr[This.style.index][1] + "px";
+                       //换位后将下标也一起调换，不然调换完后无法调换回来
+                        thisindex = This.style.index;
+                        This.style.index = ls.style.index;
+                        ls.style.index = thisindex;
                     }
                     Document.onmousemove = Document.onmouseup = null;
 
@@ -53,7 +68,7 @@ window.onload = function () {
 
         })()
     }
-
+    posiT(img, arr)
     // 递归找出最大值
     function Max(i) {
         var leng = img.length;
@@ -101,26 +116,27 @@ function dista(obj1, obj2) {
 
     for (var i = 0; i < obj2.length; i++) {
         if (coll(obj1, obj2[i]) && obj1 != obj2[i]) {
-            var c = gg(obj1,obj2[i])
+            var c = gg(obj1, obj2[i])
             //找出C面值后，在找出这个值对应的位置
-            if( c < value ){
+            if (c < value) {
                 value = c;
                 index = i;
             }
-        } 
+        }
     }
-    if(index != -1){
+
+    if (index != -1) {
         return obj2[index]
-    }else{
+    } else {
         return false
     }
 }
 //找出两个边的距离后用勾股定理找出C边
-function gg(obj1, obj2){
-    var objLeft =  obj1.offsetLeft -  obj2.offsetLeft;
-    var objtop = obj1.offsetTop -  obj2.offsetTop;
-
-    return  Math.sqrt(objLeft*objLeft + objtop*objtop)
+function gg(obj1, obj2) {
+    var objLeft = obj1.offsetLeft - obj2.offsetLeft;
+    var objtop = obj1.offsetTop - obj2.offsetTop;
+    //sqrt (a²+b²)=c²开平方根
+    return Math.sqrt(objLeft * objLeft + objtop * objtop)
 }
 //找出最大值
 // function Max(obj) {
