@@ -1,6 +1,7 @@
 window.onload = function () {
     var Document = document;
     var img = Document.querySelectorAll("img");
+    var inpt = Document.querySelector("input");
     var leg = img.length;
     var arr = [];
     var Imax = null;
@@ -12,7 +13,6 @@ window.onload = function () {
         //利用二维数组储存
         arr.push([img[i].offsetLeft, img[i].offsetTop]);
         img[i].style.index = i;
-        
         (function () {
             var tem = i;      //采用闭包方式使新创建的变量留存在内存当中，重新申明多个tem ，不同的tem里面存储着不同的值       
             img[i].onmousedown = function (ev) {
@@ -52,14 +52,7 @@ window.onload = function () {
                     }
                     //调换图片位置
                     if( ls ){
-                        This.style.left = arr[ls.style.index][0] + "px";
-                        This.style.top = arr[ls.style.index][1] + "px";    
-                        ls.style.left = arr[This.style.index][0] + "px";
-                        ls.style.top = arr[This.style.index][1] + "px";
-                       //换位后将下标也一起调换，不然调换完后无法调换回来
-                        thisindex = This.style.index;
-                        This.style.index = ls.style.index;
-                        ls.style.index = thisindex;
+                        Hh(This,ls)
                     }
                     Document.onmousemove = Document.onmouseup = null;
 
@@ -68,7 +61,30 @@ window.onload = function () {
 
         })()
     }
+    inpt.onclick = function aa(){
+    /*
+    Math.ceil();  //向上取整。 
+    Math.floor();  //向下取整。
+    Math.round();  //四舍五入。
+    */  
+       
+        var Lt = leg - 1;
+        var ram_1 = Math.round(Math.random()*Lt);
+        var ram_2 = Math.round(Math.random()*Lt);
+   
+        if( ram_1 != ram_2 ){
+            Hh(img[ram_1],img[ram_2])
+        }else{
+            //递归
+            aa();
+        }
+       
+         
+
+    }
+    
     posiT(img, arr)
+
     // 递归找出最大值
     function Max(i) {
         var leng = img.length;
@@ -80,6 +96,19 @@ window.onload = function () {
 
         }
         return Max(i + 1)
+    }
+
+    //换位
+    function Hh(obj1,obj2){
+        // console.log(obj1,obj2)
+        obj1.style.left = arr[obj2.style.index][0] + "px";
+        obj1.style.top = arr[obj2.style.index][1] + "px";    
+        obj2.style.left = arr[obj1.style.index][0] + "px";
+        obj2.style.top = arr[obj1.style.index][1] + "px";
+       //换位后将下标也一起调换，不然调换完后无法调换回来
+        thisindex = obj1.style.index;
+        obj1.style.index = obj2.style.index;
+        obj2.style.index = thisindex;
     }
 
 }
